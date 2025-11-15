@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true})); 
 connectToDB();
 app.use(cors({
-  origin: "http://localhost:5173", // React app's URL (Vite default port)
+  origin: "http://localhost:5173", "https://district-hub-kappa.vercel.app/", // React app's URL (Vite default port)
   methods: "GET,POST,PUT,DELETE",
   credentials: true, // Allow cookies to be sent
 }));
