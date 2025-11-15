@@ -1,111 +1,93 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { FiHome } from 'react-icons/fi';
 import { BsLightbulb } from 'react-icons/bs';
 import { MdOutlineWaterDrop } from 'react-icons/md';
 import { AiOutlineIdcard, AiOutlineSafetyCertificate } from 'react-icons/ai';
 import { FaRegMoneyBillAlt } from 'react-icons/fa';
 import { IoHomeOutline } from 'react-icons/io5';
+import { TalukaContext } from '../contexts/TalukaContext.js';
 
 const HouseholdStats = () => {
+  const { talukaData } = useContext(TalukaContext);
+  const arr = Array.isArray(talukaData) ? talukaData : [];
+
+  const bucketYesNoOther = (field) => {
+    let yes = 0, no = 0, other = 0;
+    for (const r of arr) {
+      const v = String(r[field] || '').trim();
+      if (v === 'હા') yes++; else if (v === 'ના') no++; else other++;
+    }
+    const total = yes + no + other || 1;
+    return [
+      { label: 'Yes', value: String(yes), color: 'bg-green-500', percent: Math.round(yes * 100 / total) },
+      { label: 'No', value: String(no), color: 'bg-red-500', percent: Math.round(no * 100 / total) },
+      { label: 'Other', value: String(other), color: 'bg-yellow-500', percent: Math.round(other * 100 / total) },
+    ];
+  };
+
   const categories = [
     {
       title: 'House',
       icon: <FiHome size={24} />,
       iconBg: 'bg-green-100',
       iconColor: 'text-green-600',
-      stats: [
-        { label: 'Pakka', value: '11825', color: 'bg-green-500', percent: 85 },
-        { label: 'Kachha', value: '1272', color: 'bg-red-500', percent: 9 },
-        { label: 'Other', value: '9211', color: 'bg-yellow-500', percent: 66 },
-      ],
+      stats: bucketYesNoOther('Pakka'),
     },
     {
       title: 'Electricity',
       icon: <BsLightbulb size={24} />,
       iconBg: 'bg-yellow-100',
       iconColor: 'text-yellow-600',
-      stats: [
-        { label: 'Yes', value: '1915', color: 'bg-green-500', percent: 17 },
-        { label: 'No', value: '1682', color: 'bg-red-500', percent: 15 },
-        { label: 'Other', value: '7519', color: 'bg-yellow-500', percent: 68 },
-      ],
+      stats: bucketYesNoOther('Electricity facility'),
     },
     {
       title: 'Toilet',
       icon: <IoHomeOutline size={24} />,
       iconBg: 'bg-blue-100',
       iconColor: 'text-blue-600',
-      stats: [
-        { label: 'Yes', value: '1808', color: 'bg-green-500', percent: 19 },
-        { label: 'No', value: '162', color: 'bg-red-500', percent: 2 },
-        { label: 'Other', value: '7691', color: 'bg-yellow-500', percent: 79 },
-      ],
+      stats: bucketYesNoOther('Toilet facility'),
     },
     {
       title: 'MGNREGA',
       icon: <FaRegMoneyBillAlt size={24} />,
       iconBg: 'bg-orange-100',
       iconColor: 'text-orange-600',
-      stats: [
-        { label: 'Yes', value: '2365', color: 'bg-green-500', percent: 32 },
-        { label: 'No', value: '3319', color: 'bg-red-500', percent: 45 },
-        { label: 'Other', value: '1675', color: 'bg-yellow-500', percent: 23 },
-      ],
+      stats: bucketYesNoOther('MGNREGA Job Card Details'),
     },
     {
       title: 'PM Kisan Yojana',
       icon: <MdOutlineWaterDrop size={24} />,
       iconBg: 'bg-blue-100',
       iconColor: 'text-blue-600',
-      stats: [
-        { label: 'Yes', value: '772', color: 'bg-green-500', percent: 5 },
-        { label: 'No', value: '5945', color: 'bg-red-500', percent: 41 },
-        { label: 'Other', value: '7762', color: 'bg-yellow-500', percent: 54 },
-      ],
+      stats: bucketYesNoOther('PM KISAN Samman Nidhi Scheme'),
     },
     {
       title: 'Aadhaar Card',
       icon: <AiOutlineIdcard size={24} />,
       iconBg: 'bg-purple-100',
       iconColor: 'text-purple-600',
-      stats: [
-        { label: 'Yes', value: '21834', color: 'bg-green-500', percent: 81 },
-        { label: 'No', value: '2767', color: 'bg-red-500', percent: 10 },
-        { label: 'Other', value: '2630', color: 'bg-yellow-500', percent: 9 },
-      ],
+      stats: bucketYesNoOther('Aadhaar Card'),
     },
     {
       title: 'Caste Certificate',
       icon: <AiOutlineSafetyCertificate size={24} />,
       iconBg: 'bg-indigo-100',
       iconColor: 'text-indigo-600',
-      stats: [
-        { label: 'Yes', value: '3416', color: 'bg-green-500', percent: 13 },
-        { label: 'No', value: '18402', color: 'bg-red-500', percent: 68 },
-        { label: 'Other', value: '5213', color: 'bg-yellow-500', percent: 19 },
-      ],
+      stats: bucketYesNoOther('Caste Certificate'),
     },
     {
       title: 'PMJAY Card',
       icon: <AiOutlineSafetyCertificate size={24} />,
       iconBg: 'bg-teal-100',
       iconColor: 'text-teal-600',
-      stats: [
-        { label: 'Yes', value: '10673', color: 'bg-green-500', percent: 47 },
-        { label: 'No', value: '9073', color: 'bg-red-500', percent: 40 },
-        { label: 'Other', value: '2879', color: 'bg-yellow-500', percent: 13 },
-      ],
+      stats: bucketYesNoOther('PM JAY Card'),
     },
     {
       title: 'Jan Dhan Account',
       icon: <FaRegMoneyBillAlt size={24} />,
       iconBg: 'bg-green-100',
       iconColor: 'text-green-600',
-      stats: [
-        { label: 'Yes', value: '10002', color: 'bg-green-500', percent: 37 },
-        { label: 'No', value: '12138', color: 'bg-red-500', percent: 45 },
-        { label: 'Other', value: '4891', color: 'bg-yellow-500', percent: 18 },
-      ],
+      stats: bucketYesNoOther('How many family members do not have Jandhan Bank account?'),
     },
   ];
 
@@ -116,7 +98,7 @@ const HouseholdStats = () => {
           Household Statistics
         </h2>
         <div className="text-sm text-gray-600 bg-white px-4 py-2 rounded-lg shadow-sm">
-          Total Families: <span className="font-bold text-gray-900">13,879</span>
+          Total Families: <span className="font-bold text-gray-900">{arr.length.toLocaleString()}</span>
         </div>
       </div>
       
