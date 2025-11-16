@@ -16,7 +16,9 @@ const TalukaProvider = ({ children }) => {
 
     setLoading(true);
     setError('');
-    fetch(`/api/taluka/${encodeURIComponent(selectedTaluka)}`)
+    const base = import.meta.env.VITE_API_BASE || '';
+    const url = base ? `${base}/api/taluka/${encodeURIComponent(selectedTaluka)}` : `/api/taluka/${encodeURIComponent(selectedTaluka)}`;
+    fetch(url)
       .then(res => {
         if (!res.ok) throw new Error('Network error');
         return res.json();
